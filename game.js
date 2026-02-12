@@ -89,7 +89,7 @@ function initPhase1() {
 
     // Reset NO position
     noBtn.style.position = 'absolute';
-    noBtn.style.left = '230px';
+    noBtn.style.left = 'calc(50% + 30px)';
     noBtn.style.top = '0px';
     noBtn.style.transition = 'none';
 
@@ -117,15 +117,16 @@ function initPhase1() {
 
         const row = noBtn.closest('.buttons-row');
         const rect = row.getBoundingClientRect();
-        const maxX = rect.width - 210;
-        const maxY = 300;
+        const btnW = noBtn.offsetWidth;
+        const maxX = rect.width - btnW - 10;
+        const maxY = rect.height - 60;
 
         if (dodgeCount <= 2) {
-            moveNoTo(rand(0, maxX), rand(-150, maxY));
+            moveNoTo(rand(0, maxX), rand(0, maxY));
             if (dodgeCount === 1) showHint("Hé ! Reviens ici !");
             else showHint("Tu veux vraiment pas ? 😢");
         } else if (dodgeCount <= 4) {
-            moveNoTo(rand(0, maxX), rand(-200, maxY));
+            moveNoTo(rand(0, maxX), rand(0, maxY));
             if (dodgeCount === 3) showHint("Ok, ça devient personnel...");
             else showHint("Presque... attrapé...");
         } else if (dodgeCount === 5) {
@@ -523,7 +524,7 @@ function restart() {
     $('#transition .skip-hint').classList.remove('visible');
     // Reset NO button
     const noBtn = $('#noBtn');
-    noBtn.style.left = '230px';
+    noBtn.style.left = 'calc(50% + 30px)';
     noBtn.style.top = '0px';
     // Clear game area
     const area = $('#gameArea');

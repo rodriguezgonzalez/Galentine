@@ -71,20 +71,26 @@ body {
 }
 .buttons-row {
     display: flex;
-    gap: 30px;
+    gap: 20px;
     position: relative;
+    width: min(90vw, 400px);
+    height: 200px;
+    justify-content: center;
+    align-items: flex-start;
 }
 #yesBtn {
     background: #e84393;
     animation: pulse 2.5s ease-in-out infinite;
+    flex-shrink: 0;
 }
 #noBtn {
     background: #6c3483;
     position: absolute;
-    left: 230px;
+    left: calc(50% + 30px);
     top: 0;
     transition: none;
     z-index: 10;
+    flex-shrink: 0;
 }
 .hint-text {
     position: absolute;
@@ -99,6 +105,17 @@ body {
     white-space: nowrap;
 }
 .hint-text.show { opacity: 1; }
+
+/* ── Mobile adjustments ── */
+@media (max-width: 500px) {
+    .title-question { font-size: clamp(20px, 6vw, 28px); margin-bottom: 40px; }
+    .btn { padding: 12px 28px; font-size: 17px; }
+    .buttons-row { width: 90vw; height: 180px; }
+    .hint-text { font-size: 14px; bottom: 20px; }
+    .ending-buttons { flex-direction: column; gap: 10px; }
+    .stat-label { width: 110px; font-size: 12px; }
+    .victory-quote { font-size: 15px; padding: 0 16px; }
+}
 
 /* ── Transition ── */
 #transition {
