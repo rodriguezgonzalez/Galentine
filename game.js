@@ -89,7 +89,8 @@ function initPhase1() {
 
     // Reset NO position
     noBtn.style.position = 'absolute';
-    noBtn.style.left = 'calc(50% + 30px)';
+    noBtn.style.left = '';
+    noBtn.style.right = '0px';
     noBtn.style.top = '0px';
     noBtn.style.transition = 'none';
 
@@ -105,6 +106,7 @@ function initPhase1() {
     };
 
     function moveNoTo(x, y) {
+        noBtn.style.right = '';
         noBtn.style.transition = 'left 0.35s cubic-bezier(0.34,1.56,0.64,1), top 0.35s cubic-bezier(0.34,1.56,0.64,1)';
         noBtn.style.left = x + 'px';
         noBtn.style.top = y + 'px';
@@ -143,6 +145,7 @@ function initPhase1() {
     };
 
     function startOrbit() {
+        noBtn.style.right = '';
         const yesRect = yesBtn.getBoundingClientRect();
         const row = noBtn.closest('.buttons-row');
         const rowRect = row.getBoundingClientRect();
@@ -524,7 +527,8 @@ function restart() {
     $('#transition .skip-hint').classList.remove('visible');
     // Reset NO button
     const noBtn = $('#noBtn');
-    noBtn.style.left = 'calc(50% + 30px)';
+    noBtn.style.left = '';
+    noBtn.style.right = '0px';
     noBtn.style.top = '0px';
     // Clear game area
     const area = $('#gameArea');

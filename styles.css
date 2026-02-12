@@ -71,26 +71,24 @@ body {
 }
 .buttons-row {
     display: flex;
-    gap: 20px;
+    gap: 30px;
     position: relative;
-    width: min(90vw, 400px);
-    height: 200px;
+    min-width: min(90vw, 400px);
+    height: 250px;
     justify-content: center;
     align-items: flex-start;
 }
 #yesBtn {
     background: #e84393;
     animation: pulse 2.5s ease-in-out infinite;
-    flex-shrink: 0;
 }
 #noBtn {
     background: #6c3483;
     position: absolute;
-    left: calc(50% + 30px);
+    right: 0;
     top: 0;
     transition: none;
     z-index: 10;
-    flex-shrink: 0;
 }
 .hint-text {
     position: absolute;
