@@ -24,3 +24,7 @@ Un mini-jeu de type "dodge" où des sentiments tombent du ciel. Tu dois les évi
 ## Lancer le jeu
 
 Ouvre `index.html` dans un navigateur. C'est tout.
+
+# Concours Galentine.js 
+
+Petit projet réalisé pour le coding challenge Galentine.js de l'UQAM 2026.
