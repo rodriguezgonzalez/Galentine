@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Tu ne peux pas échapper à l'amitié</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="game">
+    <!-- PHASE 1 -->
+    <div id="phase1" class="scene active">
+        <div class="title-question">Veux-tu être ma Galentine ?</div>
+        <div class="buttons-row">
+            <button id="yesBtn" class="btn">OUI</button>
+            <button id="noBtn" class="btn">NON</button>
+        </div>
+        <div id="hint" class="hint-text"></div>
+    </div>
+
+    <!-- TRANSITION -->
+    <div id="transition" class="scene">
+        <div class="line">Oh, tu veux VRAIMENT pas</div>
+        <div class="line">être ma Galentine ?</div>
+        <div class="line" style="height:20px"></div>
+        <div class="line big">Ok alors, prouve-le !</div>
+        <div class="line big">Évite tous les bons sentiments !</div>
+        <div class="skip-hint">Flèches ou souris/tactile pour bouger — Clic pour passer</div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div id="phase2" class="scene">
+        <div class="hud">
+            <div class="hud-title">Évite les bons sentiments ! (si tu peux...)</div>
+            <div class="bar-container"><div id="barFill" class="bar-fill"></div></div>
+            <div id="hudLabel" class="hud-label">Amitié : 0%</div>
+            <div id="hudStats" class="hud-stats"></div>
+        </div>
+        <div class="game-area" id="gameArea">
+            <div class="player" id="player">
+                <div class="player-emoji">🙅</div>
+                <div class="player-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ENDING -->
+    <div id="ending" class="scene"></div>
+
+    <!-- VICTORY -->
+    <div id="victory" class="scene"></div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
