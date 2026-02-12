@@ -23,6 +23,7 @@ function rand(a, b) { return a + Math.random() * (b - a); }
 function randi(a, b) { return Math.floor(rand(a, b)); }
 function choose(arr) { return arr[randi(0, arr.length)]; }
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+const isMobile = navigator.maxTouchPoints > 0;
 
 // ── Floating hearts ──
 function spawnFloatingHearts(container) {
@@ -87,12 +88,11 @@ function initPhase1() {
     let orbitTime = 0;
     let orbitRaf = null;
 
-    // Reset NO position
-    noBtn.style.position = 'absolute';
+    // Reset NO button to normal flow
+    noBtn.classList.remove('escaping');
     noBtn.style.left = '';
-    noBtn.style.right = '0px';
-    noBtn.style.top = '0px';
-    noBtn.style.transition = 'none';
+    noBtn.style.top = '';
+    noBtn.style.transition = '';
 
     function showHint(msg) {
         hint.textContent = msg;
@@ -105,23 +105,36 @@ function initPhase1() {
         initVictory('yes', 0, null);
     };
 
+    function makeEscaping() {
+        if (!noBtn.classList.contains('escaping')) {
+            // Capture current position before switching to absolute
+            const row = noBtn.closest('.buttons-row');
+            const rowRect = row.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            noBtn.classList.add('escaping');
+            noBtn.style.left = (btnRect.left - rowRect.left) + 'px';
+            noBtn.style.top = (btnRect.top - rowRect.top) + 'px';
+        }
+    }
+
     function moveNoTo(x, y) {
-        noBtn.style.right = '';
+        makeEscaping();
         noBtn.style.transition = 'left 0.35s cubic-bezier(0.34,1.56,0.64,1), top 0.35s cubic-bezier(0.34,1.56,0.64,1)';
         noBtn.style.left = x + 'px';
         noBtn.style.top = y + 'px';
         setTimeout(() => { noBtn.style.transition = 'none'; }, 400);
     }
 
-    noBtn.onmouseenter = () => {
+    function dodgeNo() {
         if (orbiting) return;
         dodgeCount++;
 
         const row = noBtn.closest('.buttons-row');
         const rect = row.getBoundingClientRect();
         const btnW = noBtn.offsetWidth;
+        const btnH = noBtn.offsetHeight;
         const maxX = rect.width - btnW - 10;
-        const maxY = rect.height - 60;
+        const maxY = rect.height - btnH - 10;
 
         if (dodgeCount <= 2) {
             moveNoTo(rand(0, maxX), rand(0, maxY));
@@ -137,28 +150,50 @@ function initPhase1() {
             orbitAngle = 0;
             startOrbit();
         }
-    };
+    }
 
-    noBtn.onclick = () => {
-        cleanup();
-        initTransition();
-    };
+    if (isMobile) {
+        // Mobile: dodge on tap, need 2 rapid taps to actually click
+        let lastTap = 0;
+        noBtn.onclick = (e) => {
+            const now = Date.now();
+            if (now - lastTap < 400) {
+                // Double-tap = actual click
+                cleanup();
+                initTransition();
+                return;
+            }
+            lastTap = now;
+            e.preventDefault();
+            dodgeNo();
+        };
+        noBtn.onmouseenter = null;
+    } else {
+        // Desktop: dodge on hover, click goes through
+        noBtn.onmouseenter = () => dodgeNo();
+        noBtn.onclick = () => {
+            cleanup();
+            initTransition();
+        };
+    }
 
     function startOrbit() {
-        noBtn.style.right = '';
+        makeEscaping();
         const yesRect = yesBtn.getBoundingClientRect();
         const row = noBtn.closest('.buttons-row');
         const rowRect = row.getBoundingClientRect();
         const cx = yesRect.left - rowRect.left + yesRect.width / 2;
         const cy = yesRect.top - rowRect.top + yesRect.height / 2;
-        const radius = 160;
+        const radius = isMobile ? 100 : 160;
 
         function tick() {
             if (!orbiting) return;
             orbitAngle += 0.03;
             orbitTime += 16;
-            const nx = cx + Math.cos(orbitAngle) * radius - 100;
-            const ny = cy + Math.sin(orbitAngle) * radius - 25;
+            const btnW = noBtn.offsetWidth / 2;
+            const btnH = noBtn.offsetHeight / 2;
+            const nx = cx + Math.cos(orbitAngle) * radius - btnW;
+            const ny = cy + Math.sin(orbitAngle) * radius - btnH;
             noBtn.style.left = nx + 'px';
             noBtn.style.top = ny + 'px';
 
@@ -175,6 +210,8 @@ function initPhase1() {
     function cleanup() {
         orbiting = false;
         if (orbitRaf) cancelAnimationFrame(orbitRaf);
+        noBtn.onmouseenter = null;
+        noBtn.onclick = null;
         gameLoops.forEach(fn => fn());
         gameLoops = [];
     }
@@ -527,9 +564,10 @@ function restart() {
     $('#transition .skip-hint').classList.remove('visible');
     // Reset NO button
     const noBtn = $('#noBtn');
+    noBtn.classList.remove('escaping');
     noBtn.style.left = '';
-    noBtn.style.right = '0px';
-    noBtn.style.top = '0px';
+    noBtn.style.top = '';
+    noBtn.style.transition = '';
     // Clear game area
     const area = $('#gameArea');
     $$('.falling, .catch-text, .phase-hint', area).forEach(e => e.remove());
